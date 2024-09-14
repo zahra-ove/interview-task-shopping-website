@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 //use Illuminate\Foundation\Auth\User as Authenticatable;
 use MongoDB\Laravel\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use MongoDB\Laravel\Relations\HasMany;
 use PHPOpenSourceSaver\JWTAuth\Contracts\JWTSubject;
 
 class User extends Authenticatable implements JWTSubject
@@ -40,5 +41,17 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+
+    /***************************************************************************
+     *                                                                         *
+     *                             Model Relationships                         *
+     *                                                                         *
+     ***************************************************************************/
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
     }
 }
