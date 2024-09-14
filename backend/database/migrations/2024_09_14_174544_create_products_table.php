@@ -9,10 +9,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('products', function ($collection) {
-            $collection->string('name', 255)->unique();
+            $collection->string('name')->unique();
             $collection->double('price');
-            $collection->string('inventory_id')->nullable();
-            $collection->index('inventory_id', 'product_inventory_indx');
+            $collection->array('inventory');   // array of nested
             $collection->timestamps();
         });
     }
