@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.9'
 
 services:
   laravel-app:
@@ -6,34 +6,25 @@ services:
       context: ./..
       dockerfile: docker/Dockerfile
     container_name: backend
-    environment:
-      - APP_ENV=local
-      - APP_DEBUG=true
-      - SESSION_DRIVER=file
-      - DB_CONNECTION=mongodb
-      - DB_HOST=mongodb
-      - DB_PORT=${MONGO_CONTAINER_PORT}
-      - CACHE_STORE=redis
-      - REDIS_HOST=redis
-      - REDIS_PORT=${REDIS_CONTAINER_PORT}
+    env_file:
+      - ./.env
     volumes:
       - ./../backend:/var/www/html
     ports:
       - ${HOST_PORT}:${CONTAINER_PORT}
     depends_on:
       - mongodb
-      - redis
-    command: sh -c "php artisan migrate:fresh || echo 'Migration failed'; php artisan db:seed || echo 'Seeding failed'; apache2-foreground"
+#      - redis
+#    command: sh -c "php artisan migrate:fresh || echo 'Migration failed'; php artisan db:seed || echo 'Seeding failed'; apache2-foreground"
 
   mongodb:
-    image: mongo:latest
+    image: mongo:7.0.14
     container_name: mongodb
+    restart: always
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
-      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
       - MONGO_INITDB_DATABASE=${MONGO_DB}
     volumes:
-      - ./../database/mongo:/data/db
+      - mongodb:/data/db
     ports:
       - ${MONGO_HOST_PORT}:${MONGO_CONTAINER_PORT}
 
@@ -46,4 +37,5 @@ services:
       - redis_data:/data
 
 volumes:
+  mongodb:
   redis_data:
