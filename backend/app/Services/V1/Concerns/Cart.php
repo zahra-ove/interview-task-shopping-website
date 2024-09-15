@@ -3,7 +3,6 @@
 namespace App\Services\V1\Concerns;
 
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 
 
 trait Cart
@@ -20,7 +19,7 @@ trait Cart
 
     private function cartExists(): bool
     {
-        return Cache::has($this->key);
+        return Cache::tags('cart')->has($this->key);
     }
 
     private function createCart(array $cart): bool
@@ -34,23 +33,23 @@ trait Cart
 
         $cart = array_merge($initCart, $cart);
 
-        return Cache::put($this->key, json_encode($cart), $this->ttl);
+        return Cache::tags('cart')->put($this->key, json_encode($cart), $this->ttl);
     }
 
     private function getCart(): null|array
     {
-        $cart = Cache::get($this->key);
+        $cart = Cache::tags('cart')->get($this->key);
         return json_decode($cart, true);
     }
 
     private function setCart(array $data): bool
     {
-        return Cache::put($this->key, json_encode($data), $this->ttl);
+        return Cache::tags('cart')->put($this->key, json_encode($data), $this->ttl);
     }
 
     private function removeCart(): bool
     {
-        return Cache::forget($this->key);
+        return Cache::tags('cart')->forget($this->key);
     }
 
     public function ItemExistsInCart(string $productId): bool
@@ -61,9 +60,6 @@ trait Cart
         }
 
         $productIds = array_column($order_items, 'product_id');
-        Log::info("productIds:", [$productIds]);
-        Log::info("productId:", [$productId]);
-
         return in_array($productId, $productIds);
     }
 
