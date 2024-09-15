@@ -14,13 +14,12 @@ trait Cart
 
     public function setCartKey(): void
     {
-        $this->userId = (string)auth()->payload()->get('sub');
+        $this->userId = (string)auth()->user()->getKey();
         $this->key = "user:$this->userId:cart";
     }
 
     private function cartExists(): bool
     {
-        Log::info("cache has the key:" . $this->key, ["result" => Cache::has($this->key)]);
         return Cache::has($this->key);
     }
 
