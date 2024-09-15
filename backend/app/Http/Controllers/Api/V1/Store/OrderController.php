@@ -27,19 +27,13 @@ class OrderController extends Controller
         return response()->json($result, HttpResponse::HTTP_OK);
     }
 
-    public function increaseProductCount(OrderItemAddRequest $request): JsonResponse
-    {
-        $result = $this->orderService->changeProductCountBy($request->toDto()->toArray(), 'increase');
-        return response()->json($result, HttpResponse::HTTP_OK);
-    }
-
     public function decreaseProductCount(OrderItemRemoveRequest $request): JsonResponse
     {
         $result = $this->orderService->changeProductCountBy($request->toDto()->toArray(), 'decrease');
         return response()->json($result, HttpResponse::HTTP_OK);
     }
 
-    public function pay(): JsonResponse
+    public function payment(): JsonResponse
     {
         $result = $this->orderService->payment();
         return response()->json($result, HttpResponse::HTTP_OK);

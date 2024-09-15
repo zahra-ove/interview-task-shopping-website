@@ -9,7 +9,11 @@ class Product extends Model
 {
     use HasFactory;
     protected $connection = 'mongodb';
-    protected $fillable = ['name', 'price', 'inventory'];
+    protected $fillable = [
+        'name',
+        'price',
+        'inventory'
+    ];
 
 
 

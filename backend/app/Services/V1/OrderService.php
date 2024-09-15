@@ -25,11 +25,10 @@ class OrderService
     public function addProduct(array $data): bool
     {
         if($this->cartExists()) {
-            Log::info("card exists");
-            if($this->ItemExistsInCart($data['product_id'])){
-                Log::info("item already exist", ["item_id"=>$data['product_id']]);
-                return $this->changeProductCountBy($data, 'increase');
-            }
+
+             return $this->ItemExistsInCart($data['product_id'])
+                    ? $this->changeProductCountBy($data, 'increase')
+                    : $this->addNewProduct($data);
         }
 
         $this->createCart([]);
@@ -178,7 +177,7 @@ class OrderService
     {
         try {
 
-            DB::beginTransaction();
+//            DB::beginTransaction();
 
             //decrease inventory
             $this->updateInventory($cart);
@@ -193,12 +192,12 @@ class OrderService
             ]);
 
 
-            DB::commit();
+//            DB::commit();
             $this->removeCart();
             return $codeRahgiri;
 
         } catch(\Exception $e) {
-            DB::rollback();
+//            DB::rollback();
             Log::error('Order processing error', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
@@ -208,12 +207,13 @@ class OrderService
         }
     }
 
-    private function checkInventory(array &$cart): array
+    private function checkInventory(array $cart): array
     {
-        foreach($cart['order_items'] as $item) {
+        foreach($cart['order_items'] as &$item) {
             $product = $this->productRepository->find($item['product_id']);
             $stock = $product->total_available;
 
+            Log::info("total stock:" . $stock);
             if($stock <= 0) {
                 throw new \Exception('item out of stock. product_id: ' . $item['product_id']);
             }
@@ -229,54 +229,35 @@ class OrderService
         return $cart;
     }
 
-    private function updateInventory(array $cart): bool
+    private function updateInventory(array $cart): void
     {
-        try {
+        foreach($cart['order_items'] as $cartItem) {
+            $product = $this->productRepository->find($cartItem['product_id']);
 
-            DB::beginTransaction();
+            $inventory = $product->inventory;
 
-            foreach($cart['order_items'] as $item) {
-                $product = $this->productRepository->find($item['product_id']);
+            Log::info("inventory type:". gettype($inventory));
+            $cartItemCount = (int)$cartItem['count'];
 
-                foreach($product['inventory'] as $index => $inventoryStock) {
+            foreach($inventory as $index => &$inventoryItem) {
 
-                    if( $item['count'] <= $inventoryStock['count'] ) {
-                        $product['inventory'][$index]['count'] -= $item['count'];
+                if( $cartItemCount < $inventoryItem['count'] ) {
+                    $inventoryItem['count'] -= $cartItemCount;
+                    $cartItemCount = 0;
 
-
-                    } else {
-                        $item['count'] -= $inventoryStock['count'];
-                        $inventoryStock['count'] = 0;
-                    }
-
-
-                    if($product['inventory'][$index]['count'] <=0) {
-                        unset($product['inventory'][$index]);
-                    }
-
-                    if($item['count'] == 0) {
-                        break;
-                    }
+                } else {
+                    $cartItemCount -= (int)$inventoryItem['count'];
+                    $inventoryItem['count'] = 0;
+                    unset($inventory[$index]);
                 }
 
-                // update product
-                $product->update([
-                    'inventory' => json_encode($product['inventory'])
-                ]);
+                if($cartItemCount <= 0) {
+                    break;
+                }
             }
 
-            DB::commit();
-            return true;
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('Inventory updating while payment error', [
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-
-            return false;
+            $product->inventory = $inventory;
+            $product->update();
         }
-
     }
 }

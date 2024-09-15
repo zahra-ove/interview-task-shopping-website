@@ -19,7 +19,7 @@ class ProductStoreRequest extends FormRequest
             'price'                    => 'required|numeric',
             'inventory'                => 'nullable|array',
             'inventory.*'              => 'required_with:inventory|array',
-            'inventory.*.inventory_id' => 'required|string',
+            'inventory.*.inventory_id' => 'required|string|exists:inventories,_id',
             'inventory.*.count'        => 'required|numeric',
         ];
     }

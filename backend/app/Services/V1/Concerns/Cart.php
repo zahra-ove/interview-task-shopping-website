@@ -10,7 +10,7 @@ trait Cart
 {
     public string $key = '';
     public null|string $userId = null;
-    private int $ttl = 60;
+    private int $ttl = 604800; // one week
 
     public function setCartKey(): void
     {
@@ -20,7 +20,8 @@ trait Cart
 
     private function cartExists(): bool
     {
-        return cache()->has($this->key);
+        Log::info("cache has the key:" . $this->key, ["result" => Cache::has($this->key)]);
+        return Cache::has($this->key);
     }
 
     private function createCart(array $cart): bool
@@ -34,35 +35,36 @@ trait Cart
 
         $cart = array_merge($initCart, $cart);
 
-        Log::info("key to cache:", [$this->key]);
-        return cache()->put($this->key, json_encode($cart), $this->ttl);
+        return Cache::put($this->key, json_encode($cart), $this->ttl);
     }
 
     private function getCart(): null|array
     {
-        $cart = cache()->get($this->key);
+        $cart = Cache::get($this->key);
         return json_decode($cart, true);
     }
 
     private function setCart(array $data): bool
     {
-        return cache()->put($this->key, json_encode($data), $this->ttl);
+        return Cache::put($this->key, json_encode($data), $this->ttl);
     }
 
     private function removeCart(): bool
     {
-        return cache()->forget($this->key);
+        return Cache::forget($this->key);
     }
 
     public function ItemExistsInCart(string $productId): bool
     {
         $order_items = $this->getCart()['order_items'];
-        Log::info("order_items:", ["items"=>$order_items, "cart"=>$this->getCart()]);
         if(empty($order_items)) {
             return false;
         }
 
         $productIds = array_column($order_items, 'product_id');
+        Log::info("productIds:", [$productIds]);
+        Log::info("productId:", [$productId]);
+
         return in_array($productId, $productIds);
     }
 
