@@ -12,10 +12,11 @@ class ProductResource extends JsonResource
         return [
             'type'          => 'products',
             'id'            => $this->_id,
-            'attributes'    => [
-                'name'      => $this->name,
-                'price'     => $this->price,
-                'inventory' => $this->when(
+            'attributes'      => [
+                'name'        => $this->name,
+                'price'       => $this->price,
+                'total_stock' => $this->total_available,
+                'inventory'   => $this->when(
                     $request->routeIs('v1:admin.products.show'),
                     $this->inventory),
             ],

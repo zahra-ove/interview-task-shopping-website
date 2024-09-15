@@ -18,4 +18,5 @@ interface ProductRepositoryInterface
     public function update(string $id, array $productData): int;
 
     public function destroy(string $id): int;
+
 }

@@ -2,12 +2,11 @@
 
 namespace app\Repositories\V1;
 
-use app\DTO\V1\ProductDTO;
 use App\Models\Product;
 use App\Repositories\V1\Contracts\ProductRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
-
+use MongoDB\BSON\ObjectId;
 
 class ProductRepository implements ProductRepositoryInterface
 {
@@ -41,4 +40,5 @@ class ProductRepository implements ProductRepositoryInterface
     {
         return Product::where('_id', $id)->delete();
     }
+
 }

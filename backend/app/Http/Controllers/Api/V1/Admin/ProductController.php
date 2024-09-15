@@ -28,7 +28,7 @@ class ProductController extends Controller
 
     public function show(string $id): JsonResponse
     {
-        $resource = $this->productRepository->show($id);
+        $resource = new ProductResource($this->productRepository->show($id));
         return response()->json($resource, HttpResponse::HTTP_OK);
     }
 
