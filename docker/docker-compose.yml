@@ -9,7 +9,8 @@ services:
     env_file:
       - ./.env
     volumes:
-      - ./../backend:/var/www/html
+      # - ./../backend:/var/www/html
+      - vendor:/var/www/html/vendor
     ports:
       - ${HOST_PORT}:${CONTAINER_PORT}
     depends_on:
@@ -38,3 +39,4 @@ services:
 volumes:
   mongodb:
   redis_data:
+  vendor:
