@@ -12,6 +12,7 @@ return new class extends Migration
             $collection->integer('total_count');
             $collection->double('total_price');
             $collection->array('order_items');  // array of nested documents
+            $collection->string('rahgiri_code')->nullable();
 
             $collection->string('user_id');
             $collection->index('user_id', 'order_user_indx');

@@ -7,7 +7,7 @@ use app\Http\Requests\Api\V1\Product\ProductStoreRequest;
 use App\Http\Requests\Api\V1\Product\ProductUpdateRequest;
 use app\Http\Resources\Api\V1\Product\ProductCollection;
 use app\Http\Resources\Api\V1\Product\ProductResource;
-use App\Repositories\V1\Contracts\ProductRepositoryInterface;
+use App\Repositories\V1\contracts\ProductRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response as HttpResponse;
 
@@ -28,7 +28,7 @@ class ProductController extends Controller
 
     public function show(string $id): JsonResponse
     {
-        $resource = new ProductResource($this->productRepository->show($id));
+        $resource = new ProductResource($this->productRepository->find($id));
         return response()->json($resource, HttpResponse::HTTP_OK);
     }
 

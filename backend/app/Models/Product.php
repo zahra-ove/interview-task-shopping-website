@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Support\Facades\DB;
-use MongoDB\BSON\ObjectId;
 use MongoDB\Laravel\Eloquent\Model;
 
 class Product extends Model

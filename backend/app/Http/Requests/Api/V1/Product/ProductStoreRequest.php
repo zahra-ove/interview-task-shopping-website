@@ -24,7 +24,6 @@ class ProductStoreRequest extends FormRequest
         ];
     }
 
-
     public function toDto(): ProductDTO
     {
         return new ProductDTO(

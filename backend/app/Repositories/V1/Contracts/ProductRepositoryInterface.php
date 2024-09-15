@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Repositories\V1\Contracts;
+namespace App\Repositories\V1\Contracts;
 
 use App\Models\Product;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -13,7 +13,7 @@ interface ProductRepositoryInterface
 
     public function store(array $productData): null|Product; //@TODO: null ro check kon
 
-    public function show(string $id): null|Product;
+    public function find(string $id): null|Product;
 
     public function update(string $id, array $productData): int;
 

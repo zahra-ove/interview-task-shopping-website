@@ -3,10 +3,10 @@
 namespace app\Repositories\V1;
 
 use App\Models\Product;
-use App\Repositories\V1\Contracts\ProductRepositoryInterface;
+use App\Repositories\V1\contracts\ProductRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
-use MongoDB\BSON\ObjectId;
+
 
 class ProductRepository implements ProductRepositoryInterface
 {
@@ -25,7 +25,7 @@ class ProductRepository implements ProductRepositoryInterface
         return Product::create($productData);
     }
 
-    public function show(string $id): null|Product
+    public function find(string $id): null|Product
     {
         return Product::findOrFail($id);
     }
