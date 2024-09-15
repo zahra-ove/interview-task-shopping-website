@@ -15,7 +15,7 @@ services:
     depends_on:
       - mongodb
 #      - redis
-#    command: sh -c "php artisan migrate:fresh || echo 'Migration failed'; php artisan db:seed || echo 'Seeding failed'; apache2-foreground"
+    command: sh -c "php artisan migrate:fresh || echo 'Migration failed'; php artisan db:seed || echo 'Seeding failed'; apache2-foreground"
 
   mongodb:
     image: mongo:7.0.14

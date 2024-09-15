@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('products', function ($collection) {
             $collection->string('name')->unique();
             $collection->double('price');
-            $collection->array('inventory');   // array of nested
+            $collection->array('inventory')->nullable();   // array of nested
             $collection->timestamps();
         });
     }
