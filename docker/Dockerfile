@@ -13,7 +13,9 @@ RUN apt-get update && apt-get install -y \
     unzip \
     curl \
     && pecl install mongodb \
-    && docker-php-ext-enable mongodb
+    && docker-php-ext-enable mongodb \
+    && pecl install redis \
+    && docker-php-ext-enable redis
 
 RUN docker-php-ext-install mbstring exif pcntl bcmath gd
 

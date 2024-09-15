@@ -114,7 +114,7 @@ return [
 
         'mongodb' => [
             'driver'   => 'mongodb',
-            'dsn'      => 'mongodb://mongodb:27017/shopping_db?retryWrites=true&w=majority',
+            'dsn'      => 'mongodb://'.env('DB_HOST').':27017/'.env('DB_DATABASE').'?retryWrites=true&w=majority',
             'database' => env('DB_DATABASE'),
         ],
 
